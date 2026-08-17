@@ -1,0 +1,131 @@
+# deepcode bundle patch: an opencode-style terminal UI over dsh-base.
+#
+# It mirrors the web surface's host/agent split: dsh-base stays the shared
+# host plane (sandbox, approval, persistence, model route, the tool/skill
+# registries), while the conversation plane — persona, tools, skills, plan
+# mode, goals, subagents — moves behind the agent preset, exactly like the web
+# app. The only thing this bundle adds on top is the terminal runner.
+
+# ── the terminal runner (the one deepcode-owned row) ────────────────────────
+
+- insert:
+    # dsh-base omits this row; the web surface adds it, and the TUI needs it
+    # for the same preset-driven conversation. The launcher injects the shipped
+    # preset root; settings `agent-presets.default` overrides `default` here.
+    - id: agent-presets
+      name: '@deepseek-ai/dsh-agent-presets'
+      config:
+        default: standard
+        roots:
+          - path: !!js dshHomePath('profiles/deepcode/presets')
+            trust: system
+
+    - id: tui-runner
+      name: 'deepcode'
+      inject: [agents, agentDefaultModel, sessions]
+
+# Full-text session search is opt-in (dsh-base keeps the sqlite index closed
+# with `openAt: never`). The /session picker search uses the host service
+# (`sessionQuery.searchSessions` — the same SQLite FTS the web calls), so this
+# layer enables it lazily on a durable index: the first search builds it, later
+# searches reuse it.
+- id: session-query-sqlite
+  config:
+    path: !!js dshHomePath('profiles/deepcode/session-search.sqlite')
+    openAt: first-search
+
+# Whole-log session statistics (LLM/tool wall times, TTFT, counts) as a
+# projection unit — the same plugin the web composes for its stats.
+- insert:
+    - id: session-stats
+      name: '@deepseek-ai/dsh-session-stats'
+
+# ── shared surface values (same as web / headless) ──────────────────────────
+
+- id: system-prompt
+  config:
+    persona: >-
+      You are a coding agent powered by the {{model}} model. Your working directory is {{cwd}}.
+
+- id: hmr
+  disabled: true
+
+- id: tools
+  config:
+    mode: !!js process.env.DSH_TOOLS_MODE
+
+# ── the agent plane moves behind agent presets (mirrors dsh-web-app) ────────
+#
+# dsh-base keeps these process-wide; the web surface disables them so each
+# session's preset owns them. The TUI is also preset-driven, so it disables the
+# same rows. (Code Mode's `code-runtime` stays a host-plane capability, as in
+# web, and needs no disable here.)
+
+- id: agent-instructions
+  disabled: true
+
+- id: tool-bash
+  disabled: true
+
+- id: tool-pwsh
+  disabled: true
+
+- id: tool-fs
+  disabled: true
+
+- id: tool-fs-search
+  disabled: true
+
+- id: tool-str-replace-editor
+  disabled: true
+
+- id: tool-jobs
+  disabled: true
+
+- id: tool-todo
+  disabled: true
+
+- id: tool-web
+  disabled: true
+
+- id: skill-filesystem
+  disabled: true
+
+- id: tool-skill
+  disabled: true
+
+- id: tool-goal
+  disabled: true
+
+- id: plan-mode
+  disabled: true
+
+- id: compaction-basic
+  disabled: true
+
+- id: command-compact
+  disabled: true
+
+- id: tool-result-pruner
+  disabled: true
+
+- id: tool-subagent
+  disabled: true
+
+- id: tool-subagent-control
+  disabled: true
+
+- id: tool-subagent-list-agents
+  disabled: true
+
+- id: tool-subagent-fork
+  disabled: true
+
+- id: tool-workflow
+  disabled: true
+
+- id: workflow-worker-thread
+  disabled: true
+
+- id: tool-ralph
+  disabled: true

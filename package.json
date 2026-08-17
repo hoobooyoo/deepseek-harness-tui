@@ -1,0 +1,43 @@
+{
+  "name": "deepcode",
+  "version": "0.2.0",
+  "description": "deepcode — an opencode-style full-screen terminal UI for DeepSeek Harness, packaged as a dsh bundle plugin.",
+  "license": "MIT",
+  "type": "module",
+  "main": "lib/index.js",
+  "bin": {
+    "deepcode": "bin/deepcode.js"
+  },
+  "files": [
+    "lib",
+    "bin",
+    "cordis.patch.yml"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "exports": {
+    ".": "./lib/index.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "keywords": [
+    "deepseek",
+    "harness",
+    "dsh",
+    "tui",
+    "terminal",
+    "opencode"
+  ],
+  "dependencies": {
+    "@deepseek-ai/dsh": "^0.1.0-rc.6",
+    "blessed": "^0.1.81",
+    "ink": "^5.2.1",
+    "react": "^18.3.1"
+  }
+}
