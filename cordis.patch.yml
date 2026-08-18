@@ -15,7 +15,7 @@
     - id: agent-presets
       name: '@deepseek-ai/dsh-agent-presets'
       config:
-        default: standard
+        default: code
         roots:
           - path: !!js dshHomePath('profiles/deepcode/presets')
             trust: system
@@ -73,8 +73,8 @@
 - id: tool-fs
   disabled: true
 
-- id: tool-fs-search
-  disabled: true
+# tool-fs-search stays enabled — the TUI needs the glob tool for the @ file
+# mention picker (dsh-at-file will be added when network is available).
 
 - id: tool-str-replace-editor
   disabled: true
