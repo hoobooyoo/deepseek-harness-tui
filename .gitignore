@@ -2,3 +2,4 @@ node_modules/
 .npm-cache/
 package-lock.json
 *.log
+test/
