@@ -10,15 +10,15 @@
 
 - insert:
     # dsh-base omits this row; the web surface adds it, and the TUI needs it
-    # for the same preset-driven conversation. The launcher injects the shipped
-    # preset root; settings `agent-presets.default` overrides `default` here.
+    # for the same preset-driven conversation. The roster scans the plugin's
+    # SHIPPED root by default (`includeShippedRoot`), which is the current
+    # `standard` / `ptc` / `minimal` / `cordis` set — no copied profile root,
+    # which would shadow them with a stale snapshot. Settings
+    # `agent-presets.default` overrides `default` here.
     - id: agent-presets
       name: '@deepseek-ai/dsh-agent-presets'
       config:
-        default: code
-        roots:
-          - path: !!js dshHomePath('profiles/deepcode/presets')
-            trust: system
+        default: ptc
 
     - id: tui-runner
       name: 'deepcode'
@@ -39,6 +39,13 @@
 - insert:
     - id: session-stats
       name: '@deepseek-ai/dsh-session-stats'
+
+    # Host-owned opt-in the preset delegation tools sample: without it the
+    # `tool-subagent` row in the standard/ptc presets refuses to mount
+    # ("requires @deepseek-ai/dsh-tool-subagent/model-selection-settings in the
+    # Host scope"). The web surface composes the same host row.
+    - id: subagent-model-selection-settings
+      name: '@deepseek-ai/dsh-tool-subagent/model-selection-settings'
 
 # ── shared surface values (same as web / headless) ──────────────────────────
 
