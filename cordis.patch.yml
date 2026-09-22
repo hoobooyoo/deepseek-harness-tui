@@ -57,6 +57,16 @@
     - id: workspace
       name: '@deepseek-ai/dsh-workspace'
 
+    # Cordis runtime services (dynamicCordisRunner, cordisInspect). The
+    # `创造模式` (cordis) preset carries a `tool-cordis` row that injects both,
+    # so without this host row that preset cannot mount at all and every
+    # session recorded on it fails to load ("preset \"cordis\" failed to
+    # mount ... waiting for dynamicCordisRunner, cordisInspect"). Like the
+    # workspace row, this is another capability dsh-base omits and only
+    # dsh-web-app composes.
+    - id: cordis-host-runner
+      name: '@deepseek-ai/dsh-cordis-host-runner'
+
 # ── shared surface values (same as web / headless) ──────────────────────────
 
 - id: system-prompt
