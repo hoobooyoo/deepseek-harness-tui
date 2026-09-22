@@ -47,6 +47,16 @@
     - id: subagent-model-selection-settings
       name: '@deepseek-ai/dsh-tool-subagent/model-selection-settings'
 
+    # Workspace registry: the durable grouping the web sidebar reads (a
+    # Workspace owns an ordered `sessionIds` account). dsh-base omits this row
+    # — only dsh-web-app composes it — so without it every session this TUI
+    # creates is missing from the web sidebar's workspace grouping and shows
+    # up under "未分组" instead. Sharing one registry is what makes the two
+    # surfaces agree: the web's RPC controller and the API session controller
+    # both read this same account.
+    - id: workspace
+      name: '@deepseek-ai/dsh-workspace'
+
 # ── shared surface values (same as web / headless) ──────────────────────────
 
 - id: system-prompt
